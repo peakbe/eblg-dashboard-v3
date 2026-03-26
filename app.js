@@ -168,23 +168,11 @@ function computeImpacted(heading) {
   }).addTo(map);
 
   if (arrowLayer) map.removeLayer(arrowLayer);
-  arrowLayer = L.polylineDecorator(centerline, {
-    patterns: [
-      {
-        offset: 0,
-        repeat: 200,
-        symbol: L.Symbol.arrowHead({
-          pixelSize: 14,
-          polygon: false,
-          pathOptions: {
-            stroke: true,
-            color: "#f97316",
-            weight: 3
-          }
-        })
-      }
-    ]
-  }).addTo(map);
+arrowLayer = L.polyline(centerline, {
+  color: "#f97316",
+  weight: 3
+}).addTo(map);
+
 
   const impacted = [];
 
