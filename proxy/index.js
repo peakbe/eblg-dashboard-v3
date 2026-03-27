@@ -5,6 +5,9 @@ import cors from "cors";
 const app = express();
 app.use(cors());
 
+/* ----------------------------------------------------------
+   PROXY GÉNÉRIQUE (déjà existant)
+---------------------------------------------------------- */
 app.get("/proxy", async (req, res) => {
   const url = req.query.url;
   if (!url) return res.status(400).send("Missing url");
@@ -15,6 +18,27 @@ app.get("/proxy", async (req, res) => {
     res.send(data);
   } catch (e) {
     res.status(500).send("Proxy error");
+  }
+});
+
+/* ----------------------------------------------------------
+   METAR SÉCURISÉ (nouveau)
+---------------------------------------------------------- */
+app.get("/metar", async (req, res) => {
+  try {
+    const url = `https://avwx.rest/api/metar/EBLG?format=json&token=${process.env.AVWX_API_KEY}`;
+
+    const r = await fetch(url);
+    if (!r.ok) {
+      return res.status(500).json({ error: "Erreur AVWX" });
+    }
+
+    const data = await r.json();
+    res.json(data);
+
+  } catch (err) {
+    console.error("Erreur METAR :", err);
+    res.status(500).json({ error: "Erreur serveur METAR" });
   }
 });
 
