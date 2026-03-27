@@ -18,6 +18,23 @@ async function loadMetar() {
 
 // METAR via proxy (clé AVWX cachée côté Render)
 const METAR_URL = "https://eblg-proxy.onrender.com/metar";
+async function loadMetar() {
+    try {
+        const res = await fetch(METAR_URL);
+        const data = await res.json();
+        updateMetarUI(data);
+    } catch (err) {
+        console.error("Erreur METAR :", err);
+        showMetarFallback();
+    }
+}
+function showMetarFallback() {
+    const el = document.getElementById("metar");
+    if (el) {
+        el.innerText = "METAR indisponible (fallback activé)";
+    }
+}
+
 
 // FIDS via proxy Render
 const FIDS_ARR = PROXY + encodeURIComponent("https://fids.liegeairport.com/api/flights/Arrivals");
